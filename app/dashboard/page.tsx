@@ -1,0 +1,161 @@
+import { createClient } from "@/lib/supabase/server";
+import { isUserAdmin } from "@/lib/supabase/admin-check";
+import Link from 'next/link';
+import { Button } from "@/components/ui/button";
+import { redirect } from "next/navigation";
+
+import { FetchDataSteps } from "@/components/tutorial/fetch-data-steps";
+import { Suspense } from "react";
+
+async function UserDetails() {
+  const supabase = await createClient();
+  const { data, error } = await supabase.auth.getClaims();
+
+  if (error || !data?.claims) {
+    redirect("/auth/login");
+  }
+
+  return JSON.stringify(data.claims, null, 2);
+}
+
+export default async function ProtectedPage() {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+
+  const isAdmin = await isUserAdmin (user?.id);
+  
+  return (
+    <div className="flex-1 w-full flex flex-col gap-12">
+      <div className="w-full">
+        <div className="bg-accent text-sm p-3 px-5 rounded-md text-foreground flex gap-3 items-center">
+          <div className="flex items-center gap-2">
+            <span className="font-mono">Logged in as:</span>
+            <span className="font-bold">{user?.email}</span>
+            {isAdmin && (
+              <span className="bg-yellow-200 text-yellow-800 px-2 py-0.5 rounded text-xs font-bold">
+                ADMIN
+              </span>
+            )}
+          </div>
+
+          <div className="flex gap-2">
+            {isAdmin && (
+              <Link href='/admin'>
+                <Button variant='outline' size='sm'>Admin Dashboard</Button>
+              </Link>
+            )}
+          </div>
+        </div>
+      </div>
+
+      <div className="flex flex-col gap-6">
+        <h1 className="text-3xl font-bold">Your Dashboard</h1>
+
+        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+          <Link href='/tabs/new' className="block">
+            <div className="border rounded-lg p-6 hover:shadow-lg transition-shadow">
+              <h2 className="text-xl font-semibold mb-2">
+                Create New Tab
+              </h2>
+
+              <p className="text-muted-foreground">
+                Create a new tab from scratch
+              </p>
+            </div>
+          </Link>
+
+          <Link href='/tabs/upload' className="block">
+            <div className="border rounded-lg p-6 hover:shadow-lg transition-shadow">
+              <h2 className="text-xl font-semibold mb-2">
+                Upload New Tab
+              </h2>
+
+              <p className="text-muted-foreground">
+                Upload a Guitar Pro file to start creating 3D visualizations
+              </p>
+            </div>
+          </Link>
+
+          <Link href="/tabs" className="block">
+            <div className="border rounded-lg p-4 hover:shadow-lg transition-shadow">
+              <h2 className="text-xl font-semibold mb-2">
+                My Tabs
+              </h2>
+
+              <p className="text-muted-foreground">
+                View and manage your uploaded tablatures
+              </p>
+            </div>
+          </Link>
+
+          <Link href="/tracks" className="block">
+            <div className="border rounded-lg p-6 hover:shadow-lg transition-shadow">
+              <h2 className="text-xl font-semibold mb-2">
+                My Tracks
+              </h2>
+              
+              <p className="text-muted-foreground">
+                Browse your individual tracks and 3D renders
+              </p>
+            </div>
+          </Link>
+
+          {isAdmin && (
+            <div className="mt-8">
+              <h2 className="text-2xl font-semibold mb-4">
+                Admin Quick Actions
+              </h2>
+
+              <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+                <div className="border-2 border-yellow-200 rounded-lg p-6">
+                  <h3 className="text-lg font-semibold mb-2">
+                    Manage Users
+                  </h3>
+
+                  <p className="text-muted-foreground text-sm mb-4">
+                    View and manage user accounts
+                  </p>
+
+                  <Link href="/admin/users" className="block">
+                    <Button variant="outline" size="sm">
+                      Go to Users
+                    </Button>
+                  </Link>
+                </div>
+
+                <div className="border-2 border-yellow-200 rounded-lg p-6">
+                  <h3 className="text-lg font-semibold mb-2">
+                    System Stats
+                  </h3>
+
+                  <p className="text-muted-foreground text-sm mb-4">
+                    View system performance and usage
+                  </p>
+
+                  <Link href="/admin/stats">
+                    <Button variant="outline" size="sm">
+                      View Stats
+                    </Button>
+                  </Link>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+
+      <div className="flex flex-col gap-2 items-start">
+        <h2 className="font-bold text-2xl mb-4">Your user details</h2>
+        <pre className="text-xs font-mono p-3 rounded border max-h-32 overflow-auto">
+          <Suspense>
+            <UserDetails />
+          </Suspense>
+        </pre>
+      </div>
+      <div>
+        <h2 className="font-bold text-2xl mb-4">Next steps</h2>
+        <FetchDataSteps />
+      </div>
+    </div>
+  );
+}
