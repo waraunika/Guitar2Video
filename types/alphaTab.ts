@@ -12,6 +12,9 @@ export interface AlphaTabApi {
     display: {
       scale: number;
       layoutMode: number;
+      resources: {
+        barNumberColor?: rgb
+      }
     };
   };
 }

@@ -4,9 +4,29 @@ import { useEffect, useRef, useState } from "react";
 import { PlayerControl } from "./tabs/Player/PlayerControls";
 import EditBox from "./tabs/Editor/EditBox";
 import '@/app/globals.css'
-import { AlphaTabApi } from "@/types/alphaTab";
+import { AlphaTabApi } from "@coderline/alphatab";
+import * as alphaTab from '@coderline/alphatab';
+import { useTheme } from "next-themes";
 
-const TAB_FILE_URL = "https://www.alphatab.net/files/canon.gp";
+const lightTheme = {
+  staffLineColor: '#e4e4e7',
+  barSeparatorColor: '#a1a1aa',
+  mainGlyphColor: '#27272a',
+  secondaryGlyphColor: '#44403c',
+  scoreInfoColor: '#18181b',
+  barNumberColor: '#828291',
+}
+
+const darkTheme = {
+  staffLineColor: '#44403c',
+  barSeparatorColor: '#828291',
+  mainGlyphColor: '#f4f4f5',
+  secondaryGlyphColor: '#e4e4e7',
+  scoreInfoColor: '#ffffff',
+  barNumberColor: '#d4d4d8',
+};
+
+const TAB_FILE_URL = "https://zsxbqedwjxqxgzzcxrgk.supabase.co/storage/v1/object/public/gp-files/Misc%20Traditional%20-%20Happy%20Birthday.gp5";
 const SOUNDFONT_URL =
   "https://cdn.jsdelivr.net/npm/@coderline/alphatab@latest/dist/soundfont/sonivox.sf2";
 
@@ -22,6 +42,40 @@ export default function AlphaTabViewer() {
   const [loadProgress, setLoadProgress] = useState(0);
   const [position, setPosition] = useState({ current: "00:00", total: "00:00" });
   const [editorActive, setEditorActive] = useState(false);
+  const {theme, resolvedTheme } = useTheme();
+
+  
+
+  useEffect(() => {
+    const getThemeColors = () => {
+      return resolvedTheme === 'dark' ? darkTheme : lightTheme;
+    };
+
+    const updateTheme = () => {
+    if (!apiRef.current) return;
+
+    const colors = getThemeColors();
+    apiRef.current.settings.display.resources.staffLineColor = 
+      alphaTab.model.Color.fromJson(colors.staffLineColor)!;
+    apiRef.current.settings.display.resources.barSeparatorColor = 
+      alphaTab.model.Color.fromJson(colors.barSeparatorColor)!;
+    apiRef.current.settings.display.resources.mainGlyphColor = 
+      alphaTab.model.Color.fromJson(colors.mainGlyphColor)!;
+    apiRef.current.settings.display.resources.secondaryGlyphColor = 
+      alphaTab.model.Color.fromJson(colors.secondaryGlyphColor)!;
+    apiRef.current.settings.display.resources.scoreInfoColor = 
+      alphaTab.model.Color.fromJson(colors.scoreInfoColor)!;
+    apiRef.current.settings.display.resources.barNumberColor = 
+      alphaTab.model.Color.fromJson(colors.barNumberColor)!;
+    
+    apiRef.current.updateSettings();
+    apiRef.current.render();
+  }
+
+    if (apiRef.current && isPlayerReady) {
+      updateTheme();
+    }
+  }, [resolvedTheme, isPlayerReady]);
 
   useEffect(() => {
     // AlphaTab must only run in the browser (no SSR)
@@ -30,6 +84,8 @@ export default function AlphaTabViewer() {
 
     // Dynamically import alphatab to ensure browser-only execution
     import("@coderline/alphatab").then((alphaTab) => {
+      const colors = resolvedTheme === 'dark' ? darkTheme : lightTheme;
+
       const settings = {
         file: TAB_FILE_URL,
         player: {
@@ -42,6 +98,14 @@ export default function AlphaTabViewer() {
         display: {
           scale: 1.0,
           layoutMode: alphaTab.LayoutMode.Horizontal,
+          resources: {
+            staffLineColor: alphaTab.model.Color.fromJson(colors.staffLineColor),
+            barSeparatorColor: alphaTab.model.Color.fromJson(colors.barSeparatorColor),
+            mainGlyphColor: alphaTab.model.Color.fromJson(colors.mainGlyphColor),
+            secondaryGlyphColor: alphaTab.model.Color.fromJson(colors.secondaryGlyphColor),
+            scoreInfoColor: alphaTab.model.Color.fromJson(colors.scoreInfoColor),
+            barNumberColor: alphaTab.model.Color.fromJson(colors.barNumberColor),
+          }
         },
         // Point workers to the CDN so Next.js doesn't need to bundle them
         core: {
@@ -105,11 +169,14 @@ export default function AlphaTabViewer() {
   }
 
   return (
-    <div ref={wrapperRef} className="w-[90vw] h-[85vh]" style={styles.wrapper}>
+    <div
+      ref={wrapperRef}
+      className="w-[90vw] h-[85vh] flex flex-col border border-zinc-200 dark:border-zinc-800 rounded-lg overflow-hidden bg-zinc dark:bg-zinc-950 shadow-lg relative"
+    >
       {/* Loading overlay */}
       {isLoading && (
-        <div style={styles.overlay}>
-          <div style={styles.overlayContent}>
+        <div className="absolute inset-0 z-10 backdrop-blur-sm bg-zinc/75 dark:bg-zinc-950/75 flex justify-center items-start">
+          <div className="mt-6 bg-zinc dark:bg-zinc-800 px-6 py-4 rounded-lg shadow-lg text-sm text-zinc-700 dark:text-zinc-200 border border-zinc-200 dark:border-zinc-700">
             {loadProgress > 0 && loadProgress < 100
               ? `Loading soundfont… ${loadProgress}%`
               : "Rendering sheet music…"}
@@ -120,7 +187,7 @@ export default function AlphaTabViewer() {
       {editorActive && <EditBox />}
 
       {/* Controls bar */}
-      <div style={styles.controls}>
+      <div className="flex-shrink-0 flex items-center gap-3 px-4 py-2.5 bg-zinc-50 dark:bg-zinc-900 border-b border-zinc-200 dark:border-zinc-800">
         <PlayerControl
           apiRef={apiRef.current}
           isPlayerReady={isPlayerReady}
@@ -131,90 +198,11 @@ export default function AlphaTabViewer() {
       </div>
 
       {/* Sheet music viewport */}
-      <div style={styles.content}>
-        <div ref={viewportRef} style={styles.viewport}>
+      <div className="flex-1 overflow-hidden relative">
+        <div ref={viewportRef} className="absolute inset-0 overflow-y-auto px-6 py-4 [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-zinc-300 dark:[&::-webkit-scrollbar-thumb]:bg-zinc-700 [&::-webkit-scrollbar-thumb]:rounded-full">
           <div ref={mainRef} />
         </div>
       </div>
     </div>
   );
 }
-
-// ── Inline styles (no CSS module needed) ─────────────────────────────────────
-
-const styles: Record<string, React.CSSProperties> = {
-  wrapper: {
-    display: "flex",
-    flexDirection: "column",
-    border: "1px solid #e0e4e9",
-    borderRadius: "8px",
-    overflow: "hidden",
-    background: "#ffffff",
-    boxShadow: "0 4px 12px rgba(0,0,0,0.08)",
-    position: "relative",
-  },
-  overlay: {
-    position: "absolute",
-    inset: 0,
-    zIndex: 10,
-    backdropFilter: "blur(3px)",
-    background: "rgba(255,255,255,0.75)",
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "flex-start",
-  },
-  overlayContent: {
-    marginTop: "24px",
-    background: "#fff",
-    padding: "16px 24px",
-    borderRadius: "8px",
-    boxShadow: "0 4px 16px rgba(0,0,0,0.12)",
-    fontSize: "14px",
-    color: "#333",
-    border: "1px solid #e8e8e8",
-  },
-  controls: {
-    flexShrink: 0,
-    display: "flex",
-    alignItems: "center",
-    gap: "12px",
-    padding: "10px 16px",
-    background: "#f5f7fa",
-    borderBottom: "1px solid #e0e4e9",
-  },
-  btn: {
-    width: "38px",
-    height: "38px",
-    borderRadius: "6px",
-    border: "1px solid #e0e4e9",
-    background: "#fff",
-    fontSize: "16px",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    transition: "background 0.15s",
-  },
-  playBtn: {
-    background: "#0078ff",
-    borderColor: "#0078ff",
-    color: "#fff",
-    fontSize: "14px",
-  },
-  position: {
-    fontSize: "13px",
-    color: "#555",
-    fontFamily: "monospace",
-    marginLeft: "8px",
-  },
-  content: {
-    flex: 1,
-    overflow: "hidden",
-    position: "relative",
-  },
-  viewport: {
-    position: "absolute",
-    inset: 0,
-    overflowY: "auto",
-    padding: "16px 24px",
-  },
-};

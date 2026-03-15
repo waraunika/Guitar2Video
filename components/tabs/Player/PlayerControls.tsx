@@ -5,6 +5,7 @@ import { useState } from "react";
 import ZoomControl from "../UI/ZoomControl";
 import LayoutControl from "../UI/LayoutControl";
 import { AlphaTabApi } from "@/types/alphaTab";
+import { Button } from "@/components/ui/button";
 
 interface Position {
   current: string;
@@ -66,91 +67,88 @@ export function PlayerControl({
     }
   }
 
-  const buttonBaseClass = "p-2 rounded-md border border-gray-200 bg-white text-gray-700 hover:bg-gray-50 transition-colors disabled:opacity-40 disabled:cursor-not-allowed";
-  const activeButtonClass = "bg-gray-200 border-gray-300 text-gray-900";
-
   return (
     <div className="flex items-center justify-between w-full">
       {/* Far left: Playback controls */}
       <div className="flex items-center gap-2">
-        <button
-          className={buttonBaseClass}
+        <Button
           onClick={stop}
           disabled={!isPlayerReady}
           title="Stop / Reset"
+          variant={"secondary"}
         >
           <StepBack size={18} />
-        </button>
+        </Button>
 
-        <button
-          className={`${buttonBaseClass} ${isPlaying ? 'bg-blue-50 border-blue-200 text-blue-600' : ''}`}
+        <Button
           onClick={togglePlay}
           disabled={!isPlayerReady}
           title={isPlaying ? "Pause" : "Play"}
+          variant={isPlaying ? "secondary" : "outline"}
         >
-          {isPlaying ? <Pause size={18} /> : <Play size={18} />}
-        </button>
+          {isPlaying ? <Pause size={24} /> : <Play size={24} />}
+        </Button>
       </div>
 
       {/* Time display */}
       <div className="flex items-center">
-        <span className="text-sm font-mono text-gray-600 bg-white px-3 py-1.5 rounded-md border border-gray-200">
+        <span className="text-sm font-mono px-3 py-1.5 rounded-md border">
           {position.current} / {position.total}
         </span>
       </div>
 
       {/* Slight right of center: Settings controls */}
       <div className="flex items-center gap-2">
-        <button
-          className={`${buttonBaseClass} ${countInActive ? activeButtonClass : ''}`}
+        <Button
           onClick={toggleCountIn}
           disabled={!isPlayerReady}
           title="Count-in"
+          variant={"secondary"}
         >
-          <Hourglass size={18} />
-        </button>
+          <Hourglass size={18} className={`${countInActive ? 'scale-110' : ''}`} />
+        </Button>
 
-        <button
-          className={`${buttonBaseClass} ${metronomeActive ? activeButtonClass : ''}`}
+        <Button
           onClick={toggleMetronome}
           disabled={!isPlayerReady}
           title="Metronome"
+          variant={"secondary"}
         >
-          <Metronome size={18} />
-        </button>
+          <Metronome size={18} className={`${metronomeActive ? 'scale-110' : ''}`} />
+        </Button>
 
-        <button
-          className={`${buttonBaseClass} ${loopActive ? activeButtonClass : ''}`}
+        <Button
           onClick={toggleLoop}
           disabled={!isPlayerReady}
           title="Loop"
+          variant={"secondary"}
         >
-          <Repeat size={18} />
-        </button>
+          <Repeat size={18} className={`${loopActive ? 'scale-110' : ''}`} />
+        </Button>
       </div>
 
       {/* Far right: Utilities */}
       <div className="flex items-center gap-2">
-        <button
-          className={buttonBaseClass}
+        <Button
           onClick={() => apiRef?.print()}
           disabled={!isPlayerReady}
           title="Print"
+          variant={"secondary"}
         >
           <Printer size={18} />
-        </button>
+        </Button>
 
-        <button
-          className={buttonBaseClass}
+        <Button
           onClick={onShowEditor}
           disabled={!isPlayerReady}
           title="Edit"
+          variant={"secondary"}
         >
           <Pencil size={18} />
-        </button>
+        </Button>
 
-        <ZoomControl apiRef={apiRef} isPlayerReady={isPlayerReady} />
-        <LayoutControl apiRef={apiRef} isPlayerReady={isPlayerReady} />
+        <ZoomControl apiRef={apiRef} />
+        <LayoutControl apiRef={apiRef}/>
       </div>
     </div>
   );
