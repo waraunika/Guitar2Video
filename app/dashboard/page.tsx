@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { Button } from "@/components/ui/button";
 import { redirect } from "next/navigation";
 
-import { FetchDataSteps } from "@/components/tutorial/fetch-data-steps";
+// import { FetchDataSteps } from "@/components/tutorial/fetch-data-steps";
 import { Suspense } from "react";
 
 async function UserDetails() {
@@ -154,7 +154,7 @@ export default async function ProtectedPage() {
       </div>
       <div>
         <h2 className="font-bold text-2xl mb-4">Next steps</h2>
-        <FetchDataSteps />
+        {/* <FetchDataSteps /> */}
       </div>
     </div>
   );
