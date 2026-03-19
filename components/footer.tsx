@@ -25,25 +25,9 @@ export default function Footer() {
             </p>
           </div>
 
-          {/* Bottom Links */}
-          <div className="mt-8 flex flex-wrap items-center justify-center gap-4 text-xs text-muted-foreground">
-            <Link href="/" className="hover:underline">
-              About
-            </Link>
-            <Link href="/" className="hover:underline">
-              Privacy
-            </Link>
-            <Link href="/" className="hover:underline">
-              Terms
-            </Link>
-            <Link href="/" className="hover:underline">
-              Contact
-            </Link>
-          </div>
-
           {/* Copyright */}
           <p className="text-xs text-muted-foreground">
-            &copy; {new Date().getFullYear()} Guitar Experience. All rights
+            &copy; {new Date().getFullYear()} Guitar Tabs 2 Video. All rights
             reserved.
           </p>
         </div>

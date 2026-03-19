@@ -39,7 +39,7 @@ export function useTempTabFile(): UseTempTabFileReturn {
     tempFileNameRef.current = null;
   }, []);
 
-  const uploadTempFile = useCallback(async (file: File) => {
+  const uploadTabFile = useCallback(async (file: File) => {
     setIsUploading(true);
     setError(null);
 

@@ -174,7 +174,7 @@ export class AlphaTexParser {
 
     // Track properties
     trackProps: {
-      color: /^\s*color\s+"?#?([A-Fa-f0-9]{6})"?/i,
+      color: /^\s*color\s+"?#?([A-Fa-f0-9]{6})"?/i,Track
       volume: /^\s*volume\s+(\d+)/i,
       balance: /^\s*balance\s+([-\d]+)/i,
       transpose: /^\s*transpose\s+([-\d]+)/i,

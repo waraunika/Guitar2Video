@@ -7,8 +7,13 @@ import { useTempTabFile } from "@/hooks/useTempTabFile";
 import { useState } from "react";
 
 export default function UploadTabs() {
-  const { fileUrl, isUploading, error, uploadTempFile, cleanupTempFile } =
-    useTempTabFile();
+  const {
+    fileUrl,
+    isUploading,
+    error,
+    uploadTempFile,
+    cleanupTempFile
+  } = useTempTabFile();
   const [currentFileName, setCurrentFileName] = useState<string | null>(null);
 
   async function handleFileLoaded(file: File) {

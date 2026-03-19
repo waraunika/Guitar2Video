@@ -27,8 +27,8 @@ const darkTheme = {
   barNumberColor: "#d4d4d8",
 };
 
+// const DEFAULT_TAB_URL = "https://www.alphatab.net/files/canon.gp";
 const DEFAULT_TAB_URL = "https://www.alphatab.net/files/canon.gp";
-// const DEFAULT_TAB_URL = "/asda.gp3";
 const SOUNDFONT_URL =
   "https://cdn.jsdelivr.net/npm/@coderline/alphatab@latest/dist/soundfont/sonivox.sf2";
 
@@ -238,7 +238,7 @@ export default function AlphaTabViewer({
   }
 
   function showEditorModal() {
-    setEditorActive((v) => !v);
+    setEditorModalActive((v) => !v);
   }
 
   function handleAlphaTexChange(newContent: string) {
