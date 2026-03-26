@@ -23,6 +23,7 @@ import {
 import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 
 interface SearchTabsProps {
   onTabSelect?: (tab: Tab) => void;
@@ -32,7 +33,6 @@ interface SearchTabsProps {
 const ITEMS_PER_PAGE = 10;
 
 export default function SearchTabs({
-  onTabSelect,
   className,
 }: SearchTabsProps) {
   const [tabs, setTabs] = useState<Tab[]>([]);
@@ -50,7 +50,7 @@ export default function SearchTabs({
   const handleTabClick = async (tab: Tab) => {
     if (tab.file_path) {
       const { data, error } = await supabase.storage
-        .from("user-tabs")
+        .from("tabs")
         .createSignedUrl(tab.file_path, 3600);
 
       if (error || !data?.signedUrl) {
@@ -75,7 +75,8 @@ export default function SearchTabs({
             `
           *,
           profiles:created_by (
-            display_name
+            display_name,
+            avatar_url
           )
         `,
             { count: "exact" },
@@ -140,6 +141,11 @@ export default function SearchTabs({
     return tab.profiles.display_name || "Unknown";
   };
 
+  const getAvatarUrl = (tab: Tab) => {
+    if (!tab.profiles) return "";
+    return tab.profiles.avatar_url;
+  };
+
   return (
     <div className={`space-y-6 ${className || ""}`}>
       <div className="relative">
@@ -199,10 +205,31 @@ export default function SearchTabs({
                 </CardTitle>
 
                 <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                  <p>Uploaded by</p>
-                  <span className="line-clamp-1">
-                    <i>{getDisplayName(tab)}</i>
-                  </span>
+                  <div className="flex items-center gap-2">
+                    <span className="text-sm text-muted-foreground">
+                      Uploaded by
+                    </span>
+
+                    <div className="flex items-center gap-2">
+                      {tab.profiles?.display_name && (
+                        <div className="relative aspect-square w-6 rounded-full overflow-hidden">
+                          <Image
+                            src={getAvatarUrl(tab)}
+                            alt="pfp"
+                            fill
+                            className="object-cover object-center"
+                            sizes="24px"
+                          />
+                        </div>
+                      )}
+
+                      <span className="line-clamp-1 pr-1">
+                        <i>
+                          {getDisplayName(tab)}
+                        </i>
+                      </span>
+                    </div>
+                  </div>
                 </div>
               </CardHeader>
 

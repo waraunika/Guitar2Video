@@ -1,6 +1,6 @@
 import { Suspense } from "react";
 import { EnvVarWarning } from "./env-var-warning";
-import { AuthButton } from "./auth-button";
+import { AuthButton } from "./auth/auth-button";
 import { ThemeSwitcher } from "./theme-switcher";
 import { hasEnvVars } from "@/lib/utils";
 import Logo from "./logo";

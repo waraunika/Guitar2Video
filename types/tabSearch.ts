@@ -7,6 +7,7 @@ export default interface Tab {
   created_by: string;
   profiles?: {
     display_name: string;
+    avatar_url: string;
   };
   file_path?: string;
 }
