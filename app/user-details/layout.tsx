@@ -5,11 +5,11 @@ import { redirect } from "next/navigation";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Dashboard",
-  description: "Welcome to your Home Page",
+  title: "Add some user details",
+  description: "You may want to edit some stuff",
 };
 
-export default async function ViewTabLayout({
+export default async function UserDetailLayout({
   children,
 }: {
   children: React.ReactNode;
@@ -26,13 +26,9 @@ export default async function ViewTabLayout({
     <main className="min-h-screen flex flex-col items-center">
       <div className="flex-1 w-full flex flex-col items-center">
         <Navbar />
-<<<<<<< HEAD
-        <div className="flex-1 flex flex-col w-full p-5">
-=======
-        <div className="flex-1 flex w-full flex-col p-5">
->>>>>>> arun-extra
+        <div className="flex-1 flex flex-col max-w-5xl p-5">
           <Suspense>
-            <div className="w-full py-8">
+            <div className="container mx-auto px-4 py-8">
               {children}
             </div>
           </Suspense>

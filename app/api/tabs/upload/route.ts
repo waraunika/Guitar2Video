@@ -62,7 +62,7 @@ export async function POST(request: NextRequest) {
     const buffer = new Uint8Array(arrayBuffer);
 
     const { error: uploadError } = await supabase.storage
-      .from("user-tabs")
+      .from("tabs")
       .upload(storageFileName, buffer, {
         contentType: file.type || "application/octet-streaam",
         cacheControl: "3600",
@@ -90,7 +90,7 @@ export async function POST(request: NextRequest) {
 
     if (dbError) {
       console.error("Database insert error: ", dbError);
-      await supabase.storage.from("user-tabs").remove([storageFileName]);
+      await supabase.storage.from("tabs").remove([storageFileName]);
 
       return NextResponse.json(
         { error: "Failed to save tab metadata" },
@@ -101,7 +101,7 @@ export async function POST(request: NextRequest) {
     console.log(dbData, "\n Database insert successful");
 
     const { data: storageData, error } = await supabase.storage
-      .from("user-tabs")
+      .from("tabs")
       .createSignedUrl(storageFileName, 3600);
 
     if (error) {

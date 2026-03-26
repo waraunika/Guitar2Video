@@ -11,7 +11,10 @@ const nextConfig = {
     }
     return config;
   },
-  turbopack: {}
+  turbopack: {},
+  images: {
+    remotePatterns: [new URL('https://gtynqpbhfwluferzqfzl.supabase.co/**')]
+  }
 };
 
 module.exports = nextConfig;

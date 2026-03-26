@@ -1,0 +1,72 @@
+[
+  {
+    "fileName": "ACDC - Hells Bells.gp5",
+    "title": "Hells Bells",
+    "artist": "AC/DC",
+    "album": "Back In Black",
+    "public": true
+  },
+  {
+    "fileName": "Adele - Hello.gp5",
+    "title": "Hello",
+    "artist": "Adele",
+    "album": "25",
+    "public": true
+  },
+  {
+    "fileName": "Aerosmith - Dream On.gp3",
+    "title": "Dream On",
+    "artist": "Aerosmith",
+    "album": "25",
+    "public": true
+  },
+  {
+    "fileName": "Ed Sheeran - Perfect.gpx",
+    "title": "Perfect",
+    "artist": "Ed Sheeran",
+    "album": "Divide",
+    "public": true
+  },
+  {
+    "fileName": "file.gp3",
+    "title": "Stairway To Heaven",
+    "artist": "Led Zeppelin",
+    "album": "Led Zeppelin IV",
+    "public": true
+  },
+  {
+    "fileName": "Malai Nasodha - Narayan Gopal.gp4",
+    "title": "Malai Nasodha",
+    "artist": "Narayan Gopal",
+    "album": "Malai Nasodha",
+    "public": true
+  },
+  {
+    "fileName": "Nepathya - Sa Karnali.gp5",
+    "title": "Sa Karnali",
+    "artist": "Nepathya",
+    "album": "Bheda ko Un Jasto",
+    "public": true
+  },
+  {
+    "fileName": "Royal Republic - Tommy-Gun.gp5",
+    "title": "Tommy Gun",
+    "artist": "Royal Republic",
+    "album": "Weekend Man",
+    "public": true
+  },
+  {
+    "fileName": "Sungha Jung - The Winner Takes It All.gp5",
+    "title": "The Winner Takes It All",
+    "artist": "ABBA",
+    "album": "Cover - Sungha Jung",
+    "public": true
+  },
+  {
+    "fileName": "The Edge Band - Lekhiyeka Sabda.gp5",
+    "title": "Lekhiyeka Sabda",
+    "artist": "The Edge Band",
+    "album": "Vibes",
+    "public": true
+  }
+]
